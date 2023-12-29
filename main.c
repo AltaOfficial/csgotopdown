@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include "library.h"
+#include "gameobjects.h"
 
 int main () 
 {
-    char* OS;
-    #ifdef __APPLE__ || __linux__
-        OS = "Unix Based";
-    #elif _WIN32 || _WIN64
-        OS = "Windows";
+    Map maps[1];
+    os_type OS = Windows;
+    #if defined(__linux__) || defined(__APPLE__)
+        OS = Unix;
+    #elif defined(_WIN32) || defined(_WIN64)
+        OS = Windows;
     #endif
 
-    printf("%s", OS);
-    main_menu(1);
+    main_menu(1, &OS, maps);
 }
