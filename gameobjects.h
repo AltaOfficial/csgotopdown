@@ -12,3 +12,9 @@ typedef struct
 {
     char* mapLayout;
 } Map;
+
+typedef struct
+{
+    float damage, range;
+    int price;
+} Weapon;

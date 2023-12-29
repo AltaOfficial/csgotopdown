@@ -37,11 +37,6 @@ void loadMaps(Map* maps)
 
 void game_start(bool* control_friendlys)
 {
-
-}
-
-void display_world()
-{
     
 }
 

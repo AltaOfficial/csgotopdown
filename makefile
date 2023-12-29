@@ -1,6 +1,6 @@
-main: main.c library.c gameobjects.c
+main: main.c library.c gameobjects.c renderer.c
 	@echo "Main Execuatable Created!"
-	@gcc -o main main.c library.c gameobjects.c
+	@gcc -o main main.c library.c gameobjects.c renderer.c
 
 clean:
 	ifeq ($(OS),Windows_NT)
