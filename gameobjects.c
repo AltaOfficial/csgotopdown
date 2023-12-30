@@ -14,5 +14,6 @@ typedef struct
 
 typedef struct
 {
-    float damage;
+    float damage, range, fireRate;
+    int price;
 } Weapon;

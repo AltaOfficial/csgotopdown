@@ -1,6 +1,6 @@
+#include <stdio.h>
 
-
-void display_world()
+void display_world(char* map)
 {
     
 }
