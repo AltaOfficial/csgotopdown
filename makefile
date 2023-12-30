@@ -8,6 +8,9 @@ clean:
 		@del main.exe
 		@del main.obj
 	endif
+	ifeq ($(OS),Unix)
+		rm main
+	endif
 
 test:
 	@echo $(info $(SHELL))

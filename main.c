@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "library.h"
 #include "gameobjects.h"
+#include "screens.c"
 
 int main () 
 {
@@ -12,5 +13,5 @@ int main ()
         OS = Windows;
     #endif
 
-    main_menu(1, &OS, maps);
+    meuns(0, &OS, maps);
 }
