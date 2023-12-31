@@ -1,4 +1,4 @@
 
-void spawnTerrorist(){
+void spawn_terrorist(){
     
 }

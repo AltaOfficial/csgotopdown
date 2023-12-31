@@ -1,6 +1,17 @@
-#include <library.c>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "gameobjects.h"
+#include "renderer.h"
 
 typedef enum {Unix, Windows} os_type;
+
+typedef struct{
+    char* selectedMaps[1];
+    bool* control_players;
+    bool* friend_fire;
+    int volume;
+} env_vars;
 
 void clear_screen(os_type* os)
 {
@@ -16,12 +27,12 @@ void clear_screen(os_type* os)
     }
 }
 
-void menus(int screen_num, os_type* os, Map maps[])
+void menus(int screen_num, os_type* os, Map maps[], env_vars* options)
 {
     int choice;
-    
-    // what the heck does load_maps do?????
-    load_maps(maps);
+    if (!options){
+        env_vars options;
+    }
 
     clear_screen(os);
     switch(screen_num)
@@ -43,16 +54,17 @@ void menus(int screen_num, os_type* os, Map maps[])
             scanf("%d", &choice);
             switch(choice){
                 case 1:
-                    menus(1, os, maps);
+                    menus(1, os, maps, options);
                 break;
                 case 2:
-                    menus(2, os, maps);
+                    menus(2, os, maps, options);
                 break;
                 case 3:
+                    clear_screen(os);
                     exit(0);
                 break;
                 default:
-                    menus(0, os, maps);
+                    menus(0, os, maps, options);
                 break;
             }
 
@@ -66,16 +78,16 @@ void menus(int screen_num, os_type* os, Map maps[])
             scanf("%d", &choice);
             if(choice == 1)
             {
-                global_var().env_var.control_players = true;
+                // Set control players to true in env struct
             }
             else if(choice == 2)
             {
-                global_var().env_var.control_players = false;
+                // Set control players to false in env struct
             }
 
 
 
-            game_start(&control_players);
+            game_start(options->control_players);
             
         break;
         // Options
@@ -94,68 +106,56 @@ void menus(int screen_num, os_type* os, Map maps[])
             printf("1. Main Menu\t3. Friendly Fire\n");
             printf("2. Exit Game\t4. Choice chance\n");
             printf("            \t5. Volume\n");
-            printf("            \t6. Color\n\n");
 
             printf("  Select Choice: ");
             scanf("%d", &choice);
 	
-	    // these are placeholder options, may not need some, example 'volume' and 'color' may not need
+	    // Volume is a placeholder option and may not be used
             switch(choice){
                 case 1:
-                    clear_screen(os);
-                    main_menu(0, os, maps);
+                    menus(0, os, maps, options);
                 break;
 
                 case 2:
+                    clear_screen(os);
                     exit(0);
                 break;
 
                 case 3:
-                    clear_screen(os);
                     printf("Friendly Fire?\n1. Yes\t2. No\n\nSelect Choice: ");
                     scanf("%d", &choice);
                     
-                    if(){
-                        global_var().env_var.friend_fire = true;
-                    }else{
-                        global_var().env_var.friend_fire = false;
+                    if(choice == 1)
+                    {
+                        // change friendly fire in env struct to true
                     }
-                    main_menu(2, os, maps);
+                    else if(choice == 2)
+                    {
+                        // change friendly fire in env struct to false
+                    }
+                    else
+                    {
+                        menus(2, os, maps, options);
+                    }
                 break;
 
                 // most likely need to be multible settings for bot chance stuff
                 case 4:
-                    clear_screen(os);
-                    main_menu(2, os, maps);
+                    menus(2, os, maps, options);
                 break;
 
                 case 5:
-                    clear_screen(os);
                     printf("Volume? \n 0 - 100\n\nSelect Choice: ");
                     scanf("%d", &choice);
 
-                    if(choice => 0 && choice < 101){
-                        global_var().env_var.volume = choice;
+                    if(choice >= 0 && choice < 101){
+                        // change volume to choice
                     }
-                    main_menu(2, os, maps);
-                break;
-
-                case 6:
-                    clear_screen(os);
-                    printf("Color? \n 1. Yes\t2. No\n\nSelect Choice: ");
-                    scanf("%d", &choice);
-
-                    if(choice == 1){
-                        global_var().env_var.color = true;
-                    }else{
-                        global_var().env_var.color = false;
-                    }
-                    main_menu(2, os, maps);
+                    menus(2, os, maps, options);
                 break;
 
                 default:
-                    clear_screen(os);
-                    main_menu(2, os, maps);
+                    menus(2, os, maps, options);
                 break;
 
             }
@@ -184,7 +184,7 @@ void menus(int screen_num, os_type* os, Map maps[])
 
                 break;
                 default:
-                    menus(3, os, maps);
+                    menus(3, os, maps, options);
                 break;
             }
         break;

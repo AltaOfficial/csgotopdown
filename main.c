@@ -1,11 +1,12 @@
 #include <stdio.h>
-#include "library.h"
+#include "screens.h"
 #include "gameobjects.h"
-#include "screens.c"
 
 int main () 
 {
-    Map maps[1];
+    Map maps[1]; // How many total maps the player can choose from
+
+    // Determining the operating system
     os_type OS = Windows;
     #if defined(__linux__) || defined(__APPLE__)
         OS = Unix;
@@ -13,5 +14,5 @@ int main ()
         OS = Windows;
     #endif
 
-    meuns(0, &OS, maps);
+    menus(0, &OS, maps, NULL); // Since null is passed for options, a new options object will be created
 }

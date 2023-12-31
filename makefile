@@ -1,6 +1,6 @@
-main: main.c library.c gameobjects.c renderer.c
+main: main.c screens.c gameobjects.c renderer.c ingame.c
 	@echo "Main Execuatable Created!"
-	@gcc -o main main.c library.c gameobjects.c renderer.c
+	@gcc -o main main.c screens.c gameobjects.c renderer.c ingame.c
 
 clean:
 	ifeq ($(OS),Windows_NT)
@@ -9,7 +9,8 @@ clean:
 		@del main.obj
 	endif
 	ifeq ($(OS),Unix)
-		rm main
+		@echo "my OS is: $(OS)"
+		@rm main
 	endif
 
 test:
