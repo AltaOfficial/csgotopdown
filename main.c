@@ -9,8 +9,10 @@ int main ()
     // Determining the operating system
     os_type OS = Windows;
     #if defined(__linux__) || defined(__APPLE__)
+        #include <ncurses.h>
         OS = Unix;
     #elif defined(_WIN32) || defined(_WIN64)
+        #include <Windows.h>
         OS = Windows;
     #endif
 
