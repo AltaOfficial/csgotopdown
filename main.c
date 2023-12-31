@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include "screens.h"
 #include "gameobjects.h"
+#if defined(__linux__) || defined(__APPLE__)
+    #include <ncurses.h>
+#elif defined(_WIN32) || defined(_WIN64)
+    #include <windows.h>
+#endif
 
 int main () 
 {
