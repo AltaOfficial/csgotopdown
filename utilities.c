@@ -1,12 +1,38 @@
-#include "renderer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #if defined(__linux__) || defined(__APPLE__)
     #include <ncurses.h>
+    #define ARROW_KEYDOWN 65
+    #define ARROW_KEYUP 66
+    #define ENTER_KEY 10
 #elif defined(_WIN32) || defined(_WIN64)
-    #include <windows.h>
+    #include <Windows.h>
+    #include <conio.h>
+    #include <stdbool.h>
+    #define initscr()
+    #define curs_set(...)
+    #define cbreak()
+    #define noecho()
+    #define printw(...)
+    #define attroff(...)
+    #define attron(...)
+    #define move(...)
+    #define endwin()
+    #define ARROW_KEYDOWN 80
+    #define ARROW_KEYUP 72
+    #define ENTER_KEY 13
 #endif
+
+typedef enum {Unix, Windows} os_type;
+
+typedef struct
+{
+    char* selectedMaps[1];
+    bool* control_players;
+    bool* friend_fire;
+    int volume;
+} env_vars;
 
 os_type get_os()
 {
@@ -15,6 +41,33 @@ os_type get_os()
     #elif defined(_WIN32) || defined(_WIN64)
         return Windows;
     #endif
+}
+
+void show_cursor(bool isOn)
+{
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO info;
+    info.bVisible = false;
+    info.dwSize = 100;
+    SetConsoleCursorInfo(handle, &info);
+}
+
+// clears the whole line the cursor is on
+void clear_line()
+{
+    printf("\x1b[2K");
+}
+
+void highlight_text_on()
+{
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(handle, BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+}
+
+void highlight_text_off()
+{
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 }
 
 int get_choice(int numItems, char* choices[])
@@ -31,58 +84,67 @@ int get_choice(int numItems, char* choices[])
             {
                 if(OS == Unix)
                 {
-                    move(7 + i, 0);
-                    clrtoeol();
+                    clear_line();
                     attron(A_REVERSE);
                     printw("* << %s >>",  choices[i]);
                     attroff(A_REVERSE);
                 }
                 else
                 {
-                    // windows version of moving to a specific line
-                    // windows version of clear to end of line
-                    // windows version of reverse on
-                    printf("* << %s >>",  choices[i]);
-                    // windows version of reverse off
+                    clear_line();
+                    highlight_text_on();
+                    printf("* << %s >>\n",  choices[i]);
+                    highlight_text_off();
                 }
             }
             else
             {
-                move(7 + i, 0);
                 if(OS == Unix)
                 {
-                    clrtoeol();
-                    printw("* << %s >>",  choices[i]);
+                    move(7 + i, 0);
+                    clear_line();
+                    printw("<< %s >>",  choices[i]);
                 }
                 else
                 {
-                    // windows version of moving to a specific line
-                    // windows version of clear to end of line
-                    // windows version of reverse on
-                    printf("* << %s >>",  choices[i]);
-                    // windows version of reverse off
+                    clear_line();
+                    printf("<< %s >>\n",  choices[i]);
                 }
             }
         }
+        
         choice = getch();
 
         switch(choice)
         {
             // Up arrow pressed
-            case 65:
-                if(!(highlight == 0)) highlight--;
+            case ARROW_KEYUP:
+                if(!(highlight == 0)) 
+                {
+                    highlight--;
+                }
                 break;
 
             // Down arrow pressed
-            case 66:
-                if(!(highlight == numItems - 1)) highlight++;
+            case ARROW_KEYDOWN:
+                if(!(highlight == numItems - 1)) 
+                {
+                    highlight++;
+                }
                 break;
         }
 
         // Enter button pressed
-        if(choice == 10)
+        if(choice == ENTER_KEY)
         {
             break;
+        }
+
+        if(OS == Windows)
+        {
+            HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+            COORD coords = {0, 6};
+            SetConsoleCursorPosition(handle, coords);
         }
     }
     return highlight;
@@ -99,6 +161,7 @@ void clear_screen()
 
         case 1:
             system("cls");
+            highlight_text_off();
         break;
     }
 }
@@ -117,15 +180,4 @@ void print_menu_title(int menuNum)
             // print options menu title
             break;
     }
-}
-
-void print(const char* text, ...)
-{
-    va_list ptr;
-    va_start(ptr, text);
-
-    char space[1000];
-
-    os_type OS = get_os();
-    (OS == Unix) ? printw("%s", text) : printf("%s", text);
 }

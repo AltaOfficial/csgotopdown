@@ -12,4 +12,4 @@ ifeq ($(OS),Windows_NT)
 else
 	@rm main
 endif
-	@echo "Removed Main Execuatable"
+	@echo Removed Main Execuatable

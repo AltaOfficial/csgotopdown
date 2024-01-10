@@ -22,6 +22,7 @@ int main ()
     }
     else
     {
+        show_cursor(false);
         menus(0, &OS, maps, NULL); // Since null is passed for options, a new options object will be created
     }
 
