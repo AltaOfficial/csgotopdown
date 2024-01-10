@@ -4,9 +4,33 @@
 #include <stdarg.h>
 #if defined(__linux__) || defined(__APPLE__)
     #include <ncurses.h>
-    #define ARROW_KEYDOWN 65
-    #define ARROW_KEYUP 66
+    #define ARROW_KEYDOWN 66
+    #define ARROW_KEYUP 65
     #define ENTER_KEY 10
+    #define HANDLE int
+    #define STD_OUTPUT_HANDLE
+    #define CONSOLE_CURSOR_INFO(...)
+    typedef struct
+    {
+        bool bVisible;
+        int dwSize;
+    } CONSOLE_CURSOR_INFO;
+    #define BACKGROUND_RED 
+    #define BACKGROUND_BLUE 
+    #define BACKGROUND_GREEN 
+    #define FOREGROUND_RED
+    #define FOREGROUND_GREEN
+    #define FOREGROUND_BLUE
+    #define COORD(...)
+    typedef struct
+    {                      
+        short x;
+        short y;
+    } COORD;
+    #define GetStdHandle(...) (2)
+    #define SetConsoleTextAttribute(...)
+    #define SetConsoleCursorPosition(...)
+    #define SetConsoleCursorInfo(...)
 #elif defined(_WIN32) || defined(_WIN64)
     #include <Windows.h>
     #include <conio.h>
@@ -15,10 +39,11 @@
     #define curs_set(...)
     #define cbreak()
     #define noecho()
-    #define printw(...)
+    #define printw(...) (1)
     #define attroff(...)
     #define attron(...)
     #define move(...)
+    #define clrtoeol()
     #define endwin()
     #define ARROW_KEYDOWN 80
     #define ARROW_KEYUP 72
