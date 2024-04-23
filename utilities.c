@@ -68,6 +68,7 @@ os_type get_os()
     #endif
 }
 
+// Windows solution to hiding the cursor
 void show_cursor(bool isOn)
 {
     HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -95,6 +96,7 @@ void highlight_text_off()
     SetConsoleTextAttribute(handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 }
 
+// Returns which of the # of choices provided the user picked
 int get_choice(int numItems, char* choices[])
 {
     int choice;
@@ -117,9 +119,11 @@ int get_choice(int numItems, char* choices[])
                 }
                 else
                 {
+                    COORD coords = {0, 7 + i};
+                    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coords);
                     clear_line();
                     highlight_text_on();
-                    printf("* << %s >>\n",  choices[i]);
+                    printf("* << %s >>",  choices[i]);
                     highlight_text_off();
                 }
             }
@@ -133,8 +137,10 @@ int get_choice(int numItems, char* choices[])
                 }
                 else
                 {
+                    COORD coords = {0, 7 + i};
+                    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coords);
                     clear_line();
-                    printf("<< %s >>\n",  choices[i]);
+                    printf("<< %s >>",  choices[i]);
                 }
             }
         }
@@ -164,13 +170,6 @@ int get_choice(int numItems, char* choices[])
         if(choice == ENTER_KEY)
         {
             break;
-        }
-
-        if(OS == Windows)
-        {
-            HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-            COORD coords = {0, 7};
-            SetConsoleCursorPosition(handle, coords);
         }
     }
     return highlight;

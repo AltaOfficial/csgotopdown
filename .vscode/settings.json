@@ -1,7 +1,12 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "ncurses.h": "c"
+        "ncurses.h": "c",
+        "utilities.h": "c",
+        "screens.h": "c",
+        "windows.h": "c",
+        "renderer.h": "c",
+        "stdlib.h": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }
